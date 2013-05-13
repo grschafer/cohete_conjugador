@@ -1,9 +1,8 @@
 #!/usr/bin/python
 
-from itertools import izip_longest
+from collections import defaultdict
 from urllib2 import urlopen
 from bs4 import BeautifulSoup
-import re
 
 params = {
     #'word': word,
@@ -21,29 +20,17 @@ params = {
     'rb2': 'ra'
 }
 req_data = '&'.join([x + '=' + y for x,y in params.iteritems()])
-scrape_regex = re.compile(r'Present\s+Indicative:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Imperfect:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Preterite:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Future:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Conditional:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Imperative:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Present Subjunctive:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)Imperfect Subjunctive:\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)')
-regex2 = re.compile(r'(?:([A-Z].*?):\s+((?:[^A-Z]+\s*)+))+$', flags=re.UNICODE | re.MULTILINE)
-
-soup = None
-
-def grouper(iterable, n, fillvalue=None):
-    "Collect data into fixed-length chunks or blocks"
-    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
-    args = [iter(iterable)] * n
-    return izip_longest(fillvalue=fillvalue, *args)
 
 def extract_conjugations(html):
-    global soup
     soup = BeautifulSoup(html)
-    text = soup.get_text()
-    #result = scrape_regex.search(text)
-    result = regex2.search(text)
-    conjs = result.groups()
-    print conjs
-    grouped_conjs = list(grouper(conjs, 6))
-    print grouped_conjs
-    
-
+    conj_dict = defaultdict(list)
+    for cell in soup.find_all('td'):
+        if cell.contents != []:
+            gen = cell.stripped_strings
+            tense = gen.next().strip(':')
+            for line in gen:
+                conj_dict[tense].append(line)
+    return conj_dict
 
 def conjugations_for_word(word):
     data = '%s&word=%s' % (req_data, word)
@@ -59,6 +46,7 @@ def conjugations_for_word(word):
 
 def main():
     conj_dict = conjugations_for_word('estar')
+    print conj_dict
     
 
 
