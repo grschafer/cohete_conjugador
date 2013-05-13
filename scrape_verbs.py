@@ -1,6 +1,17 @@
 #!/usr/bin/python
 
-from collections import defaultdict
+# Greg Schafer
+
+"""
+Accepts a text verb list as input on the command line
+Fetches all conjugations for each verb from www.conjugation.org
+Writes conjugations to output file
+
+Note: Reflexive verbs don't include pronouns (e.g. afeitarse conjugates to
+      'afeito' instead of 'me afeito')
+"""
+
+import sys
 from urllib2 import urlopen
 from bs4 import BeautifulSoup
 
@@ -23,18 +34,17 @@ req_data = '&'.join([x + '=' + y for x,y in params.iteritems()])
 
 def extract_conjugations(html):
     soup = BeautifulSoup(html)
-    conj_dict = defaultdict(list)
+    conj_dict = {}
     for cell in soup.find_all('td'):
         if cell.contents != []:
             gen = cell.stripped_strings
             tense = gen.next().strip(':')
-            for line in gen:
-                conj_dict[tense].append(line)
+            conj_dict[tense] = [conj for conj in gen]
     return conj_dict
 
 def conjugations_for_word(word):
     data = '%s&word=%s' % (req_data, word)
-    print data
+    resp = None
     try:
         resp = urlopen('http://www.conjugation.org/cgi-bin/conj.php', data)
         html = resp.read()
@@ -44,9 +54,31 @@ def conjugations_for_word(word):
     finally:
         if resp: resp.close()
 
+def conjugations_for_words(words):
+    conjs = {}
+    for word in words:
+        conjs[word] = conjugations_for_word(word)
+    return conjs
+    
+
+def get_word_list(fin):
+    words = []
+    with open(fin, 'r') as f:
+        # ignore empty and commented lines
+        words = [line.strip() for line in f \
+                 if len(line.strip()) > 2 and not line.startswith("//")]
+    return words
+    
+
+# TODO: output to a file for parsing by actionscript... (json?)
 def main():
-    conj_dict = conjugations_for_word('estar')
-    print conj_dict
+    assert len(sys.argv) == 2, "Expects 1 argument (file of verbs to conjugate)"
+    words = get_word_list(sys.argv[1])
+    conjs = conjugations_for_words(words)
+    import json
+    #print json.dumps(conjs)
+    from pprint import pprint
+    pprint(conjs)
     
 
 
