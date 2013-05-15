@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 # Greg Schafer
 
@@ -31,6 +32,8 @@ params = {
     'rb2': 'ra'
 }
 req_data = '&'.join([x + '=' + y for x,y in params.iteritems()])
+bad_words = {'oír': 'oir', 'reírse': 'reirse', 'sonreírse': 'sonreirse'}
+# encodings from http://www.tutorialspoint.com/html/html_url_encoding.htm
 
 def extract_conjugations(html):
     soup = BeautifulSoup(html)
@@ -38,17 +41,23 @@ def extract_conjugations(html):
     for cell in soup.find_all('td'):
         if cell.contents != []:
             gen = cell.stripped_strings
-            tense = gen.next().strip(':')
+            tense = gen.next().strip(':').replace(' ', '') # remove spaces
             conj_dict[tense] = [conj for conj in gen]
     return conj_dict
 
+def encode_accents(word):
+    return word.replace('á', '%e1').replace('é', '%e9').replace('í', '%ed').replace('ó', '%f3').replace('ú', '%fa').replace('ü', '%fc').replace('ñ', '%f1')
+
 def conjugations_for_word(word):
-    data = '%s&word=%s' % (req_data, word)
+    # conjugation.org can't handle accented characters in request...
+    req_word = fix_bad_words(word)
+    req_word = encode_accents(req_word)
+    data = '%s&word=%s' % (req_data, req_word)
     resp = None
     try:
         resp = urlopen('http://www.conjugation.org/cgi-bin/conj.php', data)
         html = resp.read()
-        print 'word %s had response of length %d' % (word, len(html))
+        sys.stderr.write('word %s had response of length %d\n' % (word, len(html)))
         conj_dict = extract_conjugations(html)
         return conj_dict
     finally:
@@ -69,16 +78,30 @@ def get_word_list(fin):
                  if len(line.strip()) > 2 and not line.startswith("//")]
     return words
     
+# fix_bad_ functions correct errors caused by conjugation.org
+def fix_bad_words(word):
+    if word == 'oír': word = 'oir'
+    if word == 'reírse': word = 'reirse'
+    if word == 'sonreírse': word = 'sonreirse'
+    return word
+def fix_bad_conjugations(conj_dict):
+    if 'cerrar' in conj_dict:
+        conj_dict['cerrar']['PresentIndicative'] = [u'cierro',u'cierras',u'cierra',u'cerramos',u'cerráis',u'cierran']
+        conj_dict['cerrar']['PresentSubjunctive'] = [u'cierre',u'cierres',u'cierre',u'cerremos',u'cerréis',u'cierren']
+        conj_dict['cerrar']['Indicative'] = [u'cierra',u'cierre',u'cerremos',u'cerrad',u'cierren']
+    return conj_dict
 
 # TODO: output to a file for parsing by actionscript... (json?)
 def main():
     assert len(sys.argv) == 2, "Expects 1 argument (file of verbs to conjugate)"
     words = get_word_list(sys.argv[1])
-    conjs = conjugations_for_words(words)
+    conj_dict = conjugations_for_words(words)
+    conj_dict = fix_bad_conjugations(conj_dict)
+    #print conj_dict
     import json
-    #print json.dumps(conjs)
-    from pprint import pprint
-    pprint(conjs)
+    txt = json.dumps(conj_dict, sort_keys=True,
+                     indent=4, separators=(',', ': '))
+    print txt
     
 
 
