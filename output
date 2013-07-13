@@ -1,0 +1,67 @@
+{
+    "enseñar": {
+        "Conditional": [
+            "enseñaría",
+            "enseñarías",
+            "enseñaría",
+            "enseñaríamos",
+            "enseñaríais",
+            "enseñarían"
+        ],
+        "Future": [
+            "enseñaré",
+            "enseñarás",
+            "enseñará",
+            "enseñaremos",
+            "enseñaréis",
+            "enseñarán"
+        ],
+        "Imperative": [
+            "enseña",
+            "enseñe",
+            "enseñemos",
+            "enseñad",
+            "enseñen"
+        ],
+        "Imperfect": [
+            "enseñaba",
+            "enseñabas",
+            "enseñaba",
+            "enseñábamos",
+            "enseñabais",
+            "enseñaban"
+        ],
+        "ImperfectSubjunctive": [
+            "enseñara",
+            "enseñaras",
+            "enseñara",
+            "enseñáramos",
+            "enseñarais",
+            "enseñaran"
+        ],
+        "PresentIndicative": [
+            "enseño",
+            "enseñas",
+            "enseña",
+            "enseñamos",
+            "enseñáis",
+            "enseñan"
+        ],
+        "PresentSubjunctive": [
+            "enseñe",
+            "enseñes",
+            "enseñe",
+            "enseñemos",
+            "enseñéis",
+            "enseñen"
+        ],
+        "Preterite": [
+            "enseñé",
+            "enseñaste",
+            "enseñó",
+            "enseñamos",
+            "enseñasteis",
+            "enseñaron"
+        ]
+    }
+}
