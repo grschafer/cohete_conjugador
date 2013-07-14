@@ -118,7 +118,7 @@ def main():
     txt = json.dumps(conj_dict, sort_keys=True, ensure_ascii=False,
                      indent=4, separators=(',', ': '))
     #print txt
-    with io.open('output', 'w', newline='\r\n') as f:
+    with io.open('verblist.txt', 'w', newline='\r\n') as f:
         f.write(txt)
     
 
