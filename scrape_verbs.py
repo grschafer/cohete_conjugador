@@ -31,7 +31,8 @@ params = {
     'dimperative': 'yes',
     'dp_sub': 'yes',
     'di_sub': 'yes',
-    'rb3': 'no',
+    'dp_participle': 'yes',
+    'rb3': 'yes',
     'rb2': 'ra'
 }
 # equivalent: req_data = '&'.join([x + '=' + y for x,y in params.iteritems()])
@@ -44,7 +45,12 @@ def extract_conjugations(html):
         if cell.contents != []:
             gen = cell.stripped_strings
             tense = gen.next().strip(':').replace(' ', '') # remove spaces
-            conj_dict[tense] = [conj for conj in gen]
+            if tense == 'PastParticiple':
+                # conjugation.org puts yo/me pronouns in front of participle
+                # sometimes for no good reason -- that's why split[-1]
+                conj_dict[tense] = gen.next().split[-1]
+            else:
+                conj_dict[tense] = [' '.join(conj.split()[1:]) for conj in gen]
     return conj_dict
 
 # encodings from http://www.tutorialspoint.com/html/html_url_encoding.htm
@@ -82,9 +88,15 @@ def get_word_list(fin):
                  if len(line.strip()) > 0 and not line.startswith("//")]
     return words
     
+def add_definitions(conj_dict):
+    from definitions import definitions
+    for k,v in definitions.iteritems():
+        if k in conj_dict:
+            conj_dict[k]['def'] = v
+    return conj_dict
+
 # words where conjugation.org doesn't recognize the correct verb spelling
 bad_words = {'oír': 'oir', 'reírse': 'reirse', 'sonreírse': 'sonreirse'}
-
 # fix_bad_ functions correct errors caused by conjugation.org
 def fix_bad_words(word):
     return bad_words.get(word, word)
@@ -100,6 +112,7 @@ def main():
     words = get_word_list(sys.argv[1])
     conj_dict = conjugations_for_words(words)
     conj_dict = fix_bad_conjugations(conj_dict)
+    conj_dict = add_definitions(conj_dict)
 
     import json
     txt = json.dumps(conj_dict, sort_keys=True, ensure_ascii=False,
