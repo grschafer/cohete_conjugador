@@ -9,6 +9,10 @@ Spanish verb conjugation game that I originally made for my Spanish class final
 project back in 2008. I revisited it in 2013 to add more tenses and make other
 small improvements.
 
+Note: The python conjugation scraper scrapes from conjugation.org
+Note: The dl_verbs version downloads and uses the verblist at
+http://pastebin.com/56W2AZWx
+
 
 How to run the scraper
 ======================
@@ -33,7 +37,17 @@ Output will be written to the file named "output" (sample output is included)
 How to play the game
 ====================
 
-Run the .swf file (you might need a desktop flash player for this?), which
-requires a verblist.txt file in the same folder as the swf file. The
-verblist.txt file must contain a JSON dictionary of all the verbs/tenses/forms
-to use while playing the game.
+Play it online at http://grschafer.com/2013/07/31/spanish-verb-conjugation-game
+
+To run it locally, run the .swf file (you might need a desktop flash player for
+this?), which requires a verblist.txt file in the same folder as the swf file.
+The verblist.txt file must contain a JSON dictionary of all the
+verbs/tenses/forms to use while playing the game.
+
+
+Other
+=====
+
+Cringe at my use of Comic Sans! Bahahaha! =P
+
+...sorry.
