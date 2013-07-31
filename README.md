@@ -10,6 +10,7 @@ project back in 2008. I revisited it in 2013 to add more tenses and make other
 small improvements.
 
 Note: The python conjugation scraper scrapes from conjugation.org
+
 Note: The dl_verbs version downloads and uses the verblist at
 http://pastebin.com/56W2AZWx
 
@@ -31,7 +32,8 @@ How to run the scraper
 
 7. Run the program: python scrape_verbs.py in_verbs.txt
 
-Output will be written to the file named "output" (sample output is included)
+Output will be written to the file named "verblist.txt" (sample output is
+included)
 
 
 How to play the game
