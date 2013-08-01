@@ -18,6 +18,7 @@ import io # used to write windows line endings to output file
 from urllib import urlencode
 from urllib2 import urlopen
 from bs4 import BeautifulSoup
+from definitions import definitions
 
 params = {
     #'word': word,
@@ -48,7 +49,7 @@ def extract_conjugations(html):
             if tense == 'PastParticiple':
                 # conjugation.org puts yo/me pronouns in front of participle
                 # sometimes for no good reason -- that's why split[-1]
-                conj_dict[tense] = gen.next().split[-1]
+                conj_dict[tense] = gen.next().split()[-1]
             else:
                 conj_dict[tense] = [' '.join(conj.split()[1:]) for conj in gen]
     return conj_dict
@@ -89,7 +90,6 @@ def get_word_list(fin):
     return words
     
 def add_definitions(conj_dict):
-    from definitions import definitions
     for k,v in definitions.iteritems():
         if k in conj_dict:
             conj_dict[k]['def'] = v

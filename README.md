@@ -32,7 +32,7 @@ How to run the scraper
 
 6. Install beautifulsoup4: pip install beautifulsoup4
 
-7. Run the program: python scrape_verbs.py in_verbs.txt
+7. Run the program: cd scraper; python scrape_verbs.py in_verbs.txt
 
 Output will be written to the file named "verblist.txt" (sample output is
 included)
