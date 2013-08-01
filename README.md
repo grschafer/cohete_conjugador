@@ -11,8 +11,10 @@ small improvements.
 
 Note: The python conjugation scraper scrapes from conjugation.org
 
-Note: The dl_verbs version downloads and uses the verblist at
-http://pastebin.com/56W2AZWx
+Note: The verbs_incl version only includes verbs starting with A through haber
+(due to flash file limitations) and has this verblist built-in instead of read
+from an external file (for ease of demoing). To use the full or custom
+verblists, use cohete_conjugador.swf instead
 
 
 How to run the scraper
