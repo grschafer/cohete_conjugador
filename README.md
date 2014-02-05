@@ -41,7 +41,7 @@ included)
 How to play the game
 ====================
 
-Play it online at http://grschafer.com/2013/07/31/spanish-verb-conjugation-game
+Play it online at http://grschafer.com/projects/2013/07/14/spanish-verb-conjugation-game/
 
 To run it locally, run the .swf file (you might need a desktop flash player for
 this?), which requires a verblist.txt file in the same folder as the swf file.
